@@ -1,13 +1,20 @@
 @import "tailwindcss";
 
 :root {
-  --color-bg: #0b0f16;
-  --color-panel: rgba(14, 19, 28, 0.82);
+  --color-bg: #07111f;
+  --color-bg-alt: #0b1627;
+  --color-panel: rgba(10, 20, 34, 0.82);
+  --color-panel-strong: rgba(8, 18, 31, 0.96);
+  --color-panel-soft: rgba(13, 23, 39, 0.72);
   --color-text: #eff4ff;
-  --color-muted: #98a4ba;
-  --color-dim: #64748b;
+  --color-muted: #95a5c1;
+  --color-dim: #62748f;
+  --color-border: rgba(148, 163, 184, 0.14);
+  --color-border-strong: rgba(148, 163, 184, 0.22);
   --color-up: #4ade80;
   --color-down: #f87171;
+  --color-amber: #fbbf24;
+  --color-cyan: #22d3ee;
 }
 
 @theme inline {
@@ -28,8 +35,9 @@ html {
 body {
   margin: 0;
   background:
-    radial-gradient(circle at top, rgba(59, 130, 246, 0.06), transparent 28%),
-    linear-gradient(180deg, #0b0f16 0%, #080b11 100%);
+    radial-gradient(circle at 18% 0%, rgba(34, 211, 238, 0.08), transparent 28%),
+    radial-gradient(circle at 82% 0%, rgba(59, 130, 246, 0.08), transparent 24%),
+    linear-gradient(180deg, #07111f 0%, #050d18 100%);
   color: var(--color-text);
   font-family: var(--font-geist-sans), sans-serif;
 }
@@ -37,4 +45,18 @@ body {
 ::selection {
   background: rgba(148, 163, 184, 0.28);
   color: white;
+}
+
+.market-panel {
+  background:
+    linear-gradient(180deg, rgba(15, 26, 43, 0.94), rgba(8, 17, 30, 0.96));
+  border: 1px solid var(--color-border);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.03),
+    0 18px 80px rgba(0, 0, 0, 0.28);
+}
+
+.market-panel-soft {
+  background: linear-gradient(180deg, rgba(15, 26, 43, 0.78), rgba(9, 18, 31, 0.88));
+  border: 1px solid rgba(148, 163, 184, 0.1);
 }

@@ -61,3 +61,13 @@ export function formatRelativeTime(dateString: string | null) {
 
   return formatter.format(Math.round(deltaSeconds / 86400), "day");
 }
+
+export function formatNumber(value: number | null, maximumFractionDigits = 0) {
+  if (value === null) {
+    return "—";
+  }
+
+  return new Intl.NumberFormat("en-US", {
+    maximumFractionDigits,
+  }).format(value);
+}

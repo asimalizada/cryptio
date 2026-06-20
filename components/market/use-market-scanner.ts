@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import type { MarketAsset } from "@/lib/types/market";
 
@@ -14,19 +14,30 @@ const COMPARE_LIMIT = 3;
 
 export function useMarketScanner(assets: MarketAsset[]) {
   const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
   const [sortKey, setSortKey] = useState<MarketSortKey>("marketCapRank");
   const [sortDirection, setSortDirection] = useState<MarketSortDirection>("asc");
   const [selectedCompareIds, setSelectedCompareIds] = useState<string[]>([]);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearchQuery(searchQuery);
+    }, 300);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [searchQuery]);
 
   const visibleAssets = useMemo(
     () =>
       filterAndSortAssets({
         assets,
-        searchQuery,
+        searchQuery: debouncedSearchQuery,
         sortKey,
         sortDirection,
       }),
-    [assets, searchQuery, sortDirection, sortKey],
+    [assets, debouncedSearchQuery, sortDirection, sortKey],
   );
 
   const availableSelectedCompareIds = useMemo(() => {

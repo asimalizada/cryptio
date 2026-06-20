@@ -5,7 +5,7 @@ import { ArrowUpDown, Filter, Search } from "lucide-react";
 import type { MarketAsset } from "@/lib/types/market";
 import { formatRelativeTime } from "@/lib/utils/format";
 
-import { IconSurface, ScannerRow, TabButton } from "./market-ui";
+import { IconSurface, ScannerRow, TabButton } from "../shared/market-ui";
 
 const LOADING_ROWS = Array.from({ length: 8 }, (_, index) => index);
 

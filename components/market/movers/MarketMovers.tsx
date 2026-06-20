@@ -5,8 +5,8 @@ import { Flame } from "lucide-react";
 import type { MarketAsset } from "@/lib/types/market";
 import { formatPercent } from "@/lib/utils/format";
 
-import { AssetIcon } from "./market-ui";
-import { deriveTopMovers } from "./market-view-model";
+import { AssetIcon } from "../shared/market-ui";
+import { deriveTopMovers } from "../market-view-model";
 
 const LOADING_MOVERS = Array.from({ length: 6 }, (_, index) => index);
 

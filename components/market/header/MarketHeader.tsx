@@ -2,7 +2,7 @@
 
 import { Activity, Gauge, RefreshCcw, Search } from "lucide-react";
 
-import { CompactStatus } from "./market-ui";
+import { CompactStatus } from "../shared/market-ui";
 
 export function MarketHeader({
   isLoading,

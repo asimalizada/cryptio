@@ -3,11 +3,11 @@
 import { useMarketData } from "@/lib/api/market-client";
 import { formatRelativeTime } from "@/lib/utils/format";
 
-import { MarketCompareRail } from "./market-compare-rail";
-import { MarketHeader } from "./market-header";
-import { MarketMovers } from "./market-movers";
-import { MarketOverview } from "./market-overview";
-import { MarketScannerShell } from "./market-scanner-shell";
+import { MarketCompareRail } from "./compare/MarketCompareRail";
+import { MarketHeader } from "./header/MarketHeader";
+import { MarketMovers } from "./movers/MarketMovers";
+import { MarketOverview } from "./overview/MarketOverview";
+import { MarketScannerShell } from "./scanner/MarketScannerShell";
 
 export function MarketPreviewShell() {
   const { data, error, isError, isLoading, isStale, lastUpdated, retry } =

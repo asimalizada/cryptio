@@ -10,7 +10,7 @@ import {
   formatPercent,
 } from "@/lib/utils/format";
 
-import { toneClassFromValue } from "./market-view-model";
+import { toneClassFromValue } from "../market-view-model";
 
 export function AssetIcon({
   asset,

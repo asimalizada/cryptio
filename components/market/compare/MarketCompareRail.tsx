@@ -29,6 +29,8 @@ const COMPARE_METRICS: Array<{
   { key: "priceChangePercentage1h", label: "1h %" },
 ];
 
+const COMPARE_CHART_COLORS = ["#f59e0b", "#a855f7", "#1d9bf0"] as const;
+
 export function MarketCompareRail({
   compareLimit,
   isLoading,
@@ -102,18 +104,24 @@ export function MarketCompareRail({
               <CompareGridSkeleton />
             </div>
           ) : hasSelection ? (
-            <div className="space-y-1">
-              <CompareColumnHeader selectedAssets={selectedAssets} />
-              <div className="space-y-0.5">
-                {COMPARE_METRICS.map((metric) => (
-                  <CompareMetricRow
-                    key={metric.key}
-                    label={metric.label}
-                    metricKey={metric.key}
-                    selectedAssets={selectedAssets}
-                  />
-                ))}
+            <div className="space-y-4">
+              <div className="space-y-1">
+                <CompareColumnHeader selectedAssets={selectedAssets} />
+                <div className="space-y-0.5">
+                  {COMPARE_METRICS.map((metric) => (
+                    <CompareMetricRow
+                      key={metric.key}
+                      label={metric.label}
+                      metricKey={metric.key}
+                      selectedAssets={selectedAssets}
+                    />
+                  ))}
+                </div>
               </div>
+
+              {selectedAssets.length >= 2 ? (
+                <CompareTrendChart selectedAssets={selectedAssets} />
+              ) : null}
             </div>
           ) : (
             <div className="rounded-[10px] border border-white/8 bg-white/[0.02] px-4 py-4 text-sm text-[var(--color-muted)]">
@@ -223,6 +231,78 @@ function CompareGridSkeleton() {
   return <div className="h-10 animate-pulse rounded-[8px] bg-white/[0.04]" />;
 }
 
+function CompareTrendChart({
+  selectedAssets,
+}: {
+  selectedAssets: MarketAsset[];
+}) {
+  const chartAssets = selectedAssets.filter((asset) => asset.sparkline7d.length >= 2);
+
+  if (chartAssets.length < 2) {
+    return null;
+  }
+
+  const viewWidth = 280;
+  const viewHeight = 140;
+  const chartTop = 8;
+  const chartHeight = 106;
+
+  return (
+    <div className="px-1 pt-1">
+      <div className="mb-3 flex items-center justify-between px-3">
+        <div className="text-sm text-[var(--color-muted)]">Trend</div>
+        <div className="rounded-[8px] border border-white/8 bg-white/[0.03] px-2.5 py-1 text-xs font-medium text-white">
+          7D
+        </div>
+      </div>
+
+      <svg
+        viewBox={`0 0 ${viewWidth} ${viewHeight}`}
+        className="h-[150px] w-full"
+        aria-label="Seven day comparison chart"
+      >
+        {chartAssets.map((asset, index) => {
+          const color = COMPARE_CHART_COLORS[index % COMPARE_CHART_COLORS.length];
+          const points = toSparklinePoints(
+            asset.sparkline7d,
+            viewWidth,
+            chartHeight,
+            chartTop,
+          );
+
+          return (
+            <polyline
+              key={asset.id}
+              fill="none"
+              stroke={color}
+              strokeWidth="2"
+              strokeLinejoin="round"
+              strokeLinecap="round"
+              points={points}
+            />
+          );
+        })}
+      </svg>
+
+      <div className="mt-3 flex flex-wrap items-center gap-4 px-3">
+        {chartAssets.map((asset, index) => {
+          const color = COMPARE_CHART_COLORS[index % COMPARE_CHART_COLORS.length];
+
+          return (
+            <div key={asset.id} className="flex items-center gap-2">
+              <span
+                className="h-2.5 w-2.5 rounded-full"
+                style={{ backgroundColor: color }}
+              />
+              <span className="text-sm text-[var(--color-muted)]">{asset.symbol}</span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 function formatCompareValue(
   metricKey: (typeof COMPARE_METRICS)[number]["key"],
   asset: MarketAsset,
@@ -257,4 +337,23 @@ function toneClassFromMetric(value: number | null) {
   }
 
   return "text-white";
+}
+
+function toSparklinePoints(
+  values: number[],
+  width: number,
+  chartHeight: number,
+  topOffset: number,
+) {
+  const min = Math.min(...values);
+  const max = Math.max(...values);
+  const range = max - min || 1;
+
+  return values
+    .map((value, index) => {
+      const x = (index / (values.length - 1)) * width;
+      const y = topOffset + chartHeight - ((value - min) / range) * chartHeight;
+      return `${x},${y}`;
+    })
+    .join(" ");
 }

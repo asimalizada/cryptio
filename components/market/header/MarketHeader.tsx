@@ -1,6 +1,6 @@
 "use client";
 
-import { Activity, Gauge, RefreshCcw, Search } from "lucide-react";
+import { Activity, Gauge, RefreshCcw } from "lucide-react";
 
 import { CompactStatus } from "../shared/market-ui";
 
@@ -26,18 +26,6 @@ export function MarketHeader({
             Cryptio
           </p>
           <p className="text-xs text-[var(--color-muted)]">Market scanner</p>
-        </div>
-      </div>
-
-      <div className="hidden min-w-0 flex-1 px-6 lg:block">
-        <div className="market-panel-soft focus-ring interactive-surface flex h-12 items-center gap-3 rounded-[var(--radius-pill)] px-4">
-          <Search className="h-4 w-4 text-[var(--color-dim)]" />
-          <p className="min-w-0 truncate text-sm text-[var(--color-muted)]">
-            Search assets by name or symbol...
-          </p>
-          <div className="ml-auto rounded-[8px] border border-white/10 bg-white/6 px-2.5 py-1 text-[11px] font-medium text-[var(--color-muted)]">
-            K
-          </div>
         </div>
       </div>
 

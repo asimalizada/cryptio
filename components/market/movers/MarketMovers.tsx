@@ -18,6 +18,7 @@ export function MarketMovers({
   isLoading: boolean;
 }) {
   const movers = deriveTopMovers(assets);
+  const marqueeAssets = [...movers, ...movers];
 
   return (
     <section className="market-panel stagger-in rounded-[var(--radius-card)] px-4 py-4 sm:px-5">
@@ -34,11 +35,24 @@ export function MarketMovers({
         </div>
       </div>
 
-      <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-6">
-        {isLoading
-          ? LOADING_MOVERS.map((item) => <MoverSkeleton key={item} />)
-          : movers.map((asset) => <MoverPill key={asset.id} asset={asset} />)}
-      </div>
+      {isLoading ? (
+        <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-6">
+          {LOADING_MOVERS.map((item) => (
+            <MoverSkeleton key={item} />
+          ))}
+        </div>
+      ) : (
+        <div className="relative mt-4 overflow-hidden">
+          <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-10 bg-gradient-to-r from-[var(--color-bg-alt)] to-transparent" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-10 bg-gradient-to-l from-[var(--color-bg-alt)] to-transparent" />
+
+          <div className="movers-marquee flex w-max gap-3 pr-3">
+            {marqueeAssets.map((asset, index) => (
+              <MoverPill key={`${asset.id}-${index}`} asset={asset} />
+            ))}
+          </div>
+        </div>
+      )}
     </section>
   );
 }
@@ -49,7 +63,7 @@ function MoverPill({ asset }: { asset: MarketAsset }) {
     move !== null && move < 0 ? "text-[var(--color-down)]" : "text-[var(--color-up)]";
 
   return (
-    <article className="interactive-surface rounded-[10px] border border-white/8 bg-white/[0.03] px-3 py-3 hover:border-white/14 hover:bg-white/[0.05]">
+    <article className="interactive-surface w-[220px] shrink-0 rounded-[10px] border border-white/8 bg-white/[0.03] px-3 py-3 hover:border-white/14 hover:bg-white/[0.05]">
       <div className="flex items-center gap-3">
         <AssetIcon asset={asset} size="sm" />
         <div className="min-w-0">

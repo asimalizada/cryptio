@@ -14,19 +14,19 @@ import { AssetIcon } from "../shared/market-ui";
 const COMPARE_METRICS: Array<{
   key:
     | "currentPrice"
-    | "priceChangePercentage1h"
     | "priceChangePercentage24h"
     | "priceChangePercentage7d"
     | "marketCap"
-    | "totalVolume";
+    | "totalVolume"
+    | "priceChangePercentage1h";
   label: string;
 }> = [
   { key: "currentPrice", label: "Price" },
-  { key: "priceChangePercentage1h", label: "1h %" },
   { key: "priceChangePercentage24h", label: "24h %" },
   { key: "priceChangePercentage7d", label: "7d %" },
   { key: "marketCap", label: "Market Cap" },
   { key: "totalVolume", label: "Volume (24h)" },
+  { key: "priceChangePercentage1h", label: "1h %" },
 ];
 
 export function MarketCompareRail({
@@ -42,71 +42,84 @@ export function MarketCompareRail({
   onRemove: (assetId: string) => void;
   selectedAssets: MarketAsset[];
 }) {
+  const hasSelection = selectedAssets.length > 0;
+
   return (
     <aside className="xl:sticky xl:top-4 xl:self-start">
-      <section className="market-panel stagger-in h-full rounded-[var(--radius-panel)]">
-        <div className="flex items-center justify-between border-b border-[var(--color-border)] px-5 py-4">
+      <section className="market-panel stagger-in overflow-hidden rounded-[var(--radius-panel)]">
+        <div className="flex items-start justify-between gap-4 border-b border-[var(--color-border)] px-5 py-5">
           <div>
-            <h2 className="text-lg font-semibold tracking-[-0.03em] text-white">
+            <h2 className="text-[1.05rem] font-semibold uppercase tracking-[0.06em] text-white">
               {`Compare (${selectedAssets.length}/${compareLimit})`}
             </h2>
-            <p className="mt-1 text-sm text-[var(--color-muted)]">
-              {selectedAssets.length === 0
-                ? "Select assets from the scanner."
-                : "Compare price, movement, and liquidity."}
+            <p className="mt-2 text-sm text-[var(--color-muted)]">
+              {hasSelection
+                ? "Compare price, movement, and liquidity."
+                : "Select assets from the scanner."}
             </p>
           </div>
 
           <button
             type="button"
             onClick={onClear}
-            disabled={selectedAssets.length === 0}
-            className={`focus-ring interactive-surface rounded-[9px] border border-white/10 bg-white/6 px-3 py-1.5 text-xs font-medium text-white/80 hover:border-white/16 hover:bg-white/10 ${
-              selectedAssets.length === 0 ? "cursor-not-allowed opacity-45 hover:translate-y-0" : ""
+            disabled={!hasSelection}
+            className={`focus-ring interactive-surface rounded-[9px] border border-cyan-400/16 bg-cyan-400/[0.05] px-3 py-1.5 text-xs font-medium text-white hover:border-cyan-400/26 hover:bg-cyan-400/[0.1] ${
+              !hasSelection ? "cursor-not-allowed opacity-45 hover:translate-y-0" : ""
             }`}
           >
             Clear
           </button>
         </div>
 
-        <div className="px-5 py-5">
-          {selectedAssets.length === 0 ? (
+        <div className="px-5 py-4">
+          {hasSelection ? (
+            <div className="overflow-hidden rounded-[10px] border border-white/8 bg-white/[0.02]">
+              {selectedAssets.map((asset, index) => (
+                <SelectedAssetRow
+                  key={asset.id}
+                  asset={asset}
+                  isLast={index === selectedAssets.length - 1}
+                  onRemove={onRemove}
+                />
+              ))}
+            </div>
+          ) : (
             <div className="rounded-[12px] border border-dashed border-white/12 bg-white/[0.02] p-5">
               <p className="text-sm font-medium text-white">
                 Select up to 3 assets from the scanner to compare price, movement,
                 and liquidity.
               </p>
             </div>
-          ) : (
+          )}
+        </div>
+
+        <div className="border-t border-[var(--color-border)] px-5 py-4">
+          {isLoading ? (
             <div className="space-y-3">
-              {selectedAssets.map((asset) => (
-                <SelectedAssetRow
-                  key={asset.id}
-                  asset={asset}
-                  onRemove={onRemove}
-                />
-              ))}
+              <CompareGridSkeleton />
+              <CompareGridSkeleton />
+              <CompareGridSkeleton />
+              <CompareGridSkeleton />
+            </div>
+          ) : hasSelection ? (
+            <div className="space-y-1">
+              <CompareColumnHeader selectedAssets={selectedAssets} />
+              <div className="space-y-0.5">
+                {COMPARE_METRICS.map((metric) => (
+                  <CompareMetricRow
+                    key={metric.key}
+                    label={metric.label}
+                    metricKey={metric.key}
+                    selectedAssets={selectedAssets}
+                  />
+                ))}
+              </div>
+            </div>
+          ) : (
+            <div className="rounded-[10px] border border-white/8 bg-white/[0.02] px-4 py-4 text-sm text-[var(--color-muted)]">
+              Comparison metrics will appear here once you select assets.
             </div>
           )}
-
-          <div className="mt-5 space-y-3">
-            {isLoading ? (
-              <>
-                <CompareSkeleton />
-                <CompareSkeleton />
-                <CompareSkeleton />
-              </>
-            ) : (
-              COMPARE_METRICS.map((metric) => (
-                <CompareMetricRow
-                  key={metric.key}
-                  label={metric.label}
-                  metricKey={metric.key}
-                  selectedAssets={selectedAssets}
-                />
-              ))
-            )}
-          </div>
         </div>
       </section>
     </aside>
@@ -115,13 +128,19 @@ export function MarketCompareRail({
 
 function SelectedAssetRow({
   asset,
+  isLast,
   onRemove,
 }: {
   asset: MarketAsset;
+  isLast: boolean;
   onRemove: (assetId: string) => void;
 }) {
   return (
-    <div className="interactive-surface flex items-center gap-3 rounded-[10px] border border-white/8 bg-white/[0.03] px-3 py-3 hover:border-white/14 hover:bg-white/[0.05]">
+    <div
+      className={`flex items-center gap-3 px-4 py-3 ${
+        isLast ? "" : "border-b border-white/8"
+      }`}
+    >
       <AssetIcon asset={asset} size="sm" />
       <div className="min-w-0 flex-1">
         <p className="truncate text-sm font-medium text-white">{asset.symbol}</p>
@@ -139,6 +158,36 @@ function SelectedAssetRow({
   );
 }
 
+function CompareColumnHeader({
+  selectedAssets,
+}: {
+  selectedAssets: MarketAsset[];
+}) {
+  const iconOnly = selectedAssets.length >= 3;
+
+  return (
+    <div
+      className="grid items-center gap-4 border-b border-white/8 pb-3"
+      style={{ gridTemplateColumns: `90px repeat(${selectedAssets.length}, minmax(0, 1fr))` }}
+    >
+      <div />
+      {selectedAssets.map((asset) => (
+        <div
+          key={asset.id}
+          className={`flex items-center ${iconOnly ? "justify-center" : "gap-2"}`}
+        >
+          <AssetIcon asset={asset} size="sm" />
+          {!iconOnly ? (
+            <span className="truncate text-sm font-medium text-white">
+              {asset.symbol}
+            </span>
+          ) : null}
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function CompareMetricRow({
   label,
   metricKey,
@@ -149,40 +198,29 @@ function CompareMetricRow({
   selectedAssets: MarketAsset[];
 }) {
   return (
-    <div className="interactive-surface rounded-[10px] border border-white/8 bg-white/[0.02] px-4 py-3 hover:border-white/14 hover:bg-white/[0.04]">
-      <div className="mb-2 text-sm text-[var(--color-muted)]">{label}</div>
-      <div
-        className={
-          selectedAssets.length >= 3
-            ? "grid grid-cols-3 gap-3"
-            : selectedAssets.length === 2
-              ? "grid grid-cols-2 gap-3"
-              : "grid grid-cols-1 gap-3"
-        }
-      >
-        {selectedAssets.length === 0 ? (
-          <span className="text-sm font-medium text-white/75">—</span>
-        ) : (
-          selectedAssets.map((asset) => (
-            <span
-              key={`${asset.id}-${metricKey}`}
-              className={`text-sm font-medium ${
-                metricKey.includes("priceChangePercentage")
-                  ? toneClassFromMetric(asset[metricKey] as number | null)
-                  : "text-white"
-              }`}
-            >
-              {formatCompareValue(metricKey, asset)}
-            </span>
-          ))
-        )}
-      </div>
+    <div
+      className="grid items-center gap-4 border-b border-white/6 py-3 last:border-b-0"
+      style={{ gridTemplateColumns: `90px repeat(${selectedAssets.length}, minmax(0, 1fr))` }}
+    >
+      <div className="text-sm text-[var(--color-muted)]">{label}</div>
+      {selectedAssets.map((asset) => (
+        <div
+          key={`${asset.id}-${metricKey}`}
+          className={`truncate text-sm font-medium ${
+            metricKey.includes("priceChangePercentage")
+              ? toneClassFromMetric(asset[metricKey] as number | null)
+              : "text-white"
+          }`}
+        >
+          {formatCompareValue(metricKey, asset)}
+        </div>
+      ))}
     </div>
   );
 }
 
-function CompareSkeleton() {
-  return <div className="h-[46px] animate-pulse rounded-[10px] bg-white/[0.04]" />;
+function CompareGridSkeleton() {
+  return <div className="h-10 animate-pulse rounded-[8px] bg-white/[0.04]" />;
 }
 
 function formatCompareValue(
@@ -192,8 +230,6 @@ function formatCompareValue(
   switch (metricKey) {
     case "currentPrice":
       return formatCurrency(asset.currentPrice);
-    case "priceChangePercentage1h":
-      return formatPercent(asset.priceChangePercentage1h);
     case "priceChangePercentage24h":
       return formatPercent(asset.priceChangePercentage24h);
     case "priceChangePercentage7d":
@@ -202,6 +238,8 @@ function formatCompareValue(
       return formatCompactCurrency(asset.marketCap);
     case "totalVolume":
       return formatCompactCurrency(asset.totalVolume);
+    case "priceChangePercentage1h":
+      return formatPercent(asset.priceChangePercentage1h);
   }
 }
 

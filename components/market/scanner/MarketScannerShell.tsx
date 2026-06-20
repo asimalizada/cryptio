@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowDown, ArrowUp, ArrowUpDown, Filter, Search } from "lucide-react";
+import { ArrowDown, ArrowUp, ArrowUpDown, Search } from "lucide-react";
 
 import type { MarketAsset } from "@/lib/types/market";
 import { formatRelativeTime } from "@/lib/utils/format";
@@ -9,7 +9,7 @@ import type {
   MarketSortDirection,
   MarketSortKey,
 } from "../market-view-model";
-import { IconSurface, ScannerRow, TabButton } from "../shared/market-ui";
+import { ScannerRow, TabButton } from "../shared/market-ui";
 
 const LOADING_ROWS = Array.from({ length: 8 }, (_, index) => index);
 
@@ -77,11 +77,7 @@ export function MarketScannerShell({
             </label>
 
             <div className="flex items-center gap-2">
-              <TabButton label="All Coins" isActive />
-              <TabButton label="Top 100" />
-              <IconSurface>
-                <Filter className="h-4 w-4" />
-              </IconSurface>
+              <TabButton label="Top 100" isActive />
             </div>
           </div>
         </div>
@@ -106,7 +102,7 @@ export function MarketScannerShell({
         <>
           <div className="overflow-x-auto">
             <div className="min-w-[980px]">
-              <div className="grid grid-cols-[48px_68px_1.7fr_1fr_0.9fr_0.9fr_1.1fr_1.05fr_124px_56px] items-center gap-3 border-b border-[var(--color-border)] px-4 py-3 text-[0.72rem] font-medium uppercase tracking-[0.16em] text-[var(--color-dim)] sm:px-5">
+              <div className="grid grid-cols-[48px_68px_minmax(180px,1.2fr)_1fr_0.9fr_0.9fr_1.1fr_1.05fr_124px_56px] items-center gap-3 border-b border-[var(--color-border)] px-4 py-3 text-[0.72rem] font-medium uppercase tracking-[0.16em] text-[var(--color-dim)] sm:px-5">
                 <span />
                 <SortHeader
                   activeKey={sortKey}
@@ -251,12 +247,12 @@ function SortHeader({
 
 function ScannerRowSkeleton() {
   return (
-    <div className="grid grid-cols-[48px_68px_1.7fr_1fr_0.9fr_0.9fr_1.1fr_1.05fr_124px_56px] items-center gap-3 px-4 py-4 sm:px-5">
+    <div className="grid grid-cols-[48px_68px_minmax(180px,1.2fr)_1fr_0.9fr_0.9fr_1.1fr_1.05fr_124px_56px] items-center gap-3 px-4 py-4 sm:px-5">
       <div className="h-4 w-4 animate-pulse rounded-full bg-white/8" />
       <div className="h-4 w-8 animate-pulse rounded-full bg-white/8" />
-      <div className="flex items-center gap-3">
+      <div className="flex min-w-0 items-center gap-3">
         <div className="h-10 w-10 animate-pulse rounded-full bg-white/8" />
-        <div className="space-y-2">
+        <div className="min-w-0 max-w-[230px] space-y-2 xl:max-w-[250px]">
           <div className="h-4 w-16 animate-pulse rounded-full bg-white/8" />
           <div className="h-3 w-24 animate-pulse rounded-full bg-white/6" />
         </div>

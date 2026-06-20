@@ -160,7 +160,7 @@ export function ScannerRow({
 }) {
   return (
     <div
-      className={`grid grid-cols-[48px_68px_1.7fr_1fr_0.9fr_0.9fr_1.1fr_1.05fr_124px_56px] items-center gap-3 px-4 py-4 transition-[background-color,transform,border-color] duration-200 sm:px-5 ${
+      className={`grid grid-cols-[48px_68px_minmax(180px,1.2fr)_1fr_0.9fr_0.9fr_1.1fr_1.05fr_124px_56px] items-center gap-3 px-4 py-4 transition-[background-color,transform,border-color] duration-200 sm:px-5 ${
         isSelected
           ? "bg-cyan-400/[0.05]"
           : "hover:bg-white/[0.025]"
@@ -171,11 +171,16 @@ export function ScannerRow({
         {asset.marketCapRank ?? "—"}
       </div>
 
-      <div className="flex items-center gap-3">
+      <div className="flex min-w-0 items-center gap-3">
         <AssetIcon asset={asset} size="md" />
-        <div className="min-w-0">
+        <div className="min-w-0 max-w-[230px] xl:max-w-[250px]">
           <p className="truncate text-sm font-medium text-white">{asset.symbol}</p>
-          <p className="truncate text-sm text-[var(--color-muted)]">{asset.name}</p>
+          <p
+            className="truncate text-sm text-[var(--color-muted)]"
+            title={asset.name}
+          >
+            {asset.name}
+          </p>
         </div>
       </div>
 

@@ -29,7 +29,7 @@ export function OverviewCard({
   const Icon = OVERVIEW_ICONS[item.visual];
 
   return (
-    <article className="market-panel rounded-[1.55rem] p-5">
+    <article className="market-panel interactive-panel stagger-in rounded-[var(--radius-card)] p-5">
       <div className="flex items-start justify-between gap-4">
         <div>
           <p className="text-[0.72rem] font-medium uppercase tracking-[0.22em] text-[var(--color-dim)]">
@@ -44,7 +44,7 @@ export function OverviewCard({
           </div>
         </div>
 
-        <div className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/[0.05] text-[var(--color-muted)]">
+        <div className="flex h-11 w-11 items-center justify-center rounded-[14px] border border-white/10 bg-white/[0.05] text-[var(--color-muted)]">
           <Icon className="h-5 w-5" />
         </div>
       </div>

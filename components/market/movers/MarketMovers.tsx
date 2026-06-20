@@ -20,7 +20,7 @@ export function MarketMovers({
   const movers = deriveTopMovers(assets);
 
   return (
-    <section className="market-panel rounded-[1.55rem] px-4 py-4 sm:px-5">
+    <section className="market-panel stagger-in rounded-[var(--radius-card)] px-4 py-4 sm:px-5">
       <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-2">
           <Flame className="h-4 w-4 text-[var(--color-amber)]" />
@@ -29,7 +29,7 @@ export function MarketMovers({
           </h2>
         </div>
 
-        <div className="rounded-full border border-white/10 bg-white/6 px-3 py-1.5 text-xs font-medium text-white/80">
+        <div className="rounded-[12px] border border-white/10 bg-white/6 px-3 py-1.5 text-xs font-medium text-white/80">
           24h
         </div>
       </div>
@@ -49,7 +49,7 @@ function MoverPill({ asset }: { asset: MarketAsset }) {
     move !== null && move < 0 ? "text-[var(--color-down)]" : "text-[var(--color-up)]";
 
   return (
-    <article className="rounded-[1.15rem] border border-white/8 bg-white/[0.03] px-3 py-3">
+    <article className="interactive-surface rounded-[14px] border border-white/8 bg-white/[0.03] px-3 py-3 hover:border-white/14 hover:bg-white/[0.05]">
       <div className="flex items-center gap-3">
         <AssetIcon asset={asset} size="sm" />
         <div className="min-w-0">
@@ -65,5 +65,5 @@ function MoverPill({ asset }: { asset: MarketAsset }) {
 }
 
 function MoverSkeleton() {
-  return <div className="h-[62px] animate-pulse rounded-[1.15rem] bg-white/[0.04]" />;
+  return <div className="h-[62px] animate-pulse rounded-[14px] bg-white/[0.04]" />;
 }

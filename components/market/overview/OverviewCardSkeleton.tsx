@@ -11,7 +11,7 @@ export function OverviewCardSkeleton() {
         </div>
         <div className="h-11 w-11 animate-pulse rounded-full bg-white/8" />
       </div>
-      <div className="mt-5 h-12 animate-pulse rounded-[14px] bg-white/[0.04]" />
+      <div className="mt-5 h-12 animate-pulse rounded-[10px] bg-white/[0.04]" />
     </article>
   );
 }

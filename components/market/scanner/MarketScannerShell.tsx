@@ -60,14 +60,14 @@ export function MarketScannerShell({
 
       {isError ? (
         <div className="px-4 py-5 sm:px-5">
-          <div className="rounded-[16px] border border-rose-400/18 bg-rose-400/8 p-5">
+          <div className="rounded-[12px] border border-rose-400/18 bg-rose-400/8 p-5">
             <p className="text-sm font-medium text-white">
               {error ?? "Market data could not be loaded. Try refreshing the scanner."}
             </p>
             <button
               type="button"
               onClick={onRetry}
-              className="focus-ring interactive-surface mt-4 rounded-[12px] border border-white/12 bg-white/8 px-4 py-2 text-sm font-medium text-white hover:bg-white/12"
+              className="focus-ring interactive-surface mt-4 rounded-[9px] border border-white/12 bg-white/8 px-4 py-2 text-sm font-medium text-white hover:bg-white/12"
             >
               Retry
             </button>

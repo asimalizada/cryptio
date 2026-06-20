@@ -44,7 +44,7 @@ export function OverviewCard({
           </div>
         </div>
 
-        <div className="flex h-11 w-11 items-center justify-center rounded-[14px] border border-white/10 bg-white/[0.05] text-[var(--color-muted)]">
+        <div className="flex h-11 w-11 items-center justify-center rounded-[10px] border border-white/10 bg-white/[0.05] text-[var(--color-muted)]">
           <Icon className="h-5 w-5" />
         </div>
       </div>

@@ -15,9 +15,9 @@
   --color-down: #f87171;
   --color-amber: #fbbf24;
   --color-cyan: #22d3ee;
-  --radius-panel: 18px;
-  --radius-card: 16px;
-  --radius-pill: 14px;
+  --radius-panel: 14px;
+  --radius-card: 12px;
+  --radius-pill: 10px;
   --ease-premium: cubic-bezier(0.22, 1, 0.36, 1);
   --duration-fast: 160ms;
   --duration-base: 220ms;

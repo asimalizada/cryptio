@@ -24,7 +24,7 @@ export function AssetIcon({
   if (!asset.image) {
     return (
       <div
-        className={`flex ${sizeClass} items-center justify-center rounded-[12px] bg-white/8 text-xs font-semibold text-white`}
+        className={`flex ${sizeClass} items-center justify-center rounded-[9px] bg-white/8 text-xs font-semibold text-white`}
       >
         {asset.symbol.slice(0, 2)}
       </div>
@@ -32,7 +32,7 @@ export function AssetIcon({
   }
 
   return (
-    <div className={`relative ${sizeClass} overflow-hidden rounded-[12px] bg-white/8`}>
+    <div className={`relative ${sizeClass} overflow-hidden rounded-[9px] bg-white/8`}>
       <Image
         src={asset.image}
         alt={asset.name}
@@ -114,7 +114,7 @@ export function IconSurface({ children }: { children: ReactNode }) {
   return (
     <button
       type="button"
-      className="focus-ring interactive-surface flex h-10 w-10 items-center justify-center rounded-[12px] border border-white/8 bg-white/[0.03] text-[var(--color-muted)] hover:border-white/14 hover:bg-white/[0.06] hover:text-white"
+      className="focus-ring interactive-surface flex h-10 w-10 items-center justify-center rounded-[9px] border border-white/8 bg-white/[0.03] text-[var(--color-muted)] hover:border-white/14 hover:bg-white/[0.06] hover:text-white"
     >
       {children}
     </button>
@@ -131,7 +131,7 @@ export function CompactStatus({
   lastUpdatedLabel: string;
 }) {
   return (
-    <div className="flex items-center gap-2 rounded-[12px] border border-white/10 bg-white/5 px-3 py-2">
+    <div className="flex items-center gap-2 rounded-[9px] border border-white/10 bg-white/5 px-3 py-2">
       <span
         className={`h-2 w-2 rounded-full ${
           isLoading
@@ -171,7 +171,7 @@ export function ScannerRow({ asset }: { asset: MarketAsset }) {
 
       <button
         type="button"
-        className="focus-ring interactive-surface flex h-9 w-9 items-center justify-center rounded-[12px] border border-white/10 bg-white/[0.04] text-[var(--color-muted)] hover:border-cyan-400/20 hover:bg-cyan-400/[0.08] hover:text-white"
+        className="focus-ring interactive-surface flex h-9 w-9 items-center justify-center rounded-[9px] border border-white/10 bg-white/[0.04] text-[var(--color-muted)] hover:border-cyan-400/20 hover:bg-cyan-400/[0.08] hover:text-white"
         aria-label={`Add ${asset.name} to compare`}
       >
         +

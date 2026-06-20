@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import type { ReactNode } from "react";
+import { Check, Plus } from "lucide-react";
 
 import type { MarketAsset } from "@/lib/types/market";
 import {
@@ -146,9 +147,25 @@ export function CompactStatus({
   );
 }
 
-export function ScannerRow({ asset }: { asset: MarketAsset }) {
+export function ScannerRow({
+  asset,
+  isCompareDisabled,
+  isSelected,
+  onToggleCompare,
+}: {
+  asset: MarketAsset;
+  isCompareDisabled: boolean;
+  isSelected: boolean;
+  onToggleCompare: (assetId: string) => void;
+}) {
   return (
-    <div className="grid grid-cols-[48px_68px_1.7fr_1fr_0.9fr_0.9fr_1.1fr_1.05fr_124px_56px] items-center gap-3 px-4 py-4 transition-[background-color,transform] duration-200 hover:bg-white/[0.025] sm:px-5">
+    <div
+      className={`grid grid-cols-[48px_68px_1.7fr_1fr_0.9fr_0.9fr_1.1fr_1.05fr_124px_56px] items-center gap-3 px-4 py-4 transition-[background-color,transform,border-color] duration-200 sm:px-5 ${
+        isSelected
+          ? "bg-cyan-400/[0.05]"
+          : "hover:bg-white/[0.025]"
+      }`}
+    >
       <div className="text-[var(--color-muted)]">☆</div>
       <div className="text-sm font-medium text-white">
         {asset.marketCapRank ?? "—"}
@@ -171,10 +188,20 @@ export function ScannerRow({ asset }: { asset: MarketAsset }) {
 
       <button
         type="button"
-        className="focus-ring interactive-surface flex h-9 w-9 items-center justify-center rounded-[9px] border border-white/10 bg-white/[0.04] text-[var(--color-muted)] hover:border-cyan-400/20 hover:bg-cyan-400/[0.08] hover:text-white"
+        onClick={() => onToggleCompare(asset.id)}
+        disabled={isCompareDisabled && !isSelected}
+        className={`focus-ring interactive-surface flex h-9 w-9 items-center justify-center rounded-[9px] border text-[var(--color-muted)] ${
+          isSelected
+            ? "border-cyan-400/25 bg-cyan-400/[0.12] text-white"
+            : "border-white/10 bg-white/[0.04] hover:border-cyan-400/20 hover:bg-cyan-400/[0.08] hover:text-white"
+        } ${isCompareDisabled && !isSelected ? "cursor-not-allowed opacity-45 hover:translate-y-0" : ""}`}
         aria-label={`Add ${asset.name} to compare`}
       >
-        +
+        {isSelected ? (
+          <Check className="h-4 w-4 text-cyan-200" />
+        ) : (
+          <Plus className="h-4 w-4" />
+        )}
       </button>
     </div>
   );

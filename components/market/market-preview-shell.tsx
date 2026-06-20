@@ -8,12 +8,27 @@ import { MarketHeader } from "./header/MarketHeader";
 import { MarketMovers } from "./movers/MarketMovers";
 import { MarketOverview } from "./overview/MarketOverview";
 import { MarketScannerShell } from "./scanner/MarketScannerShell";
+import { useMarketScanner } from "./use-market-scanner";
 
 export function MarketPreviewShell() {
   const { data, error, isError, isLoading, isStale, lastUpdated, retry } =
     useMarketData();
 
   const assets = data?.assets ?? [];
+  const {
+    clearCompare,
+    compareLimit,
+    hasReachedCompareLimit,
+    searchQuery,
+    selectedAssets,
+    selectedCompareIds,
+    setSearchQuery,
+    sortDirection,
+    sortKey,
+    toggleCompare,
+    toggleSort,
+    visibleAssets,
+  } = useMarketScanner(assets);
   const lastUpdatedLabel = isLoading
     ? "Refreshing market"
     : lastUpdated
@@ -38,17 +53,33 @@ export function MarketPreviewShell() {
             <MarketOverview assets={assets} isLoading={isLoading} />
             <MarketMovers assets={assets} isLoading={isLoading} />
             <MarketScannerShell
-              assets={assets}
+              compareLimit={compareLimit}
               error={error}
+              hasReachedCompareLimit={hasReachedCompareLimit}
               isError={isError}
               isLoading={isLoading}
               isStale={isStale}
               lastUpdated={lastUpdated}
+              onSearchChange={setSearchQuery}
               onRetry={retry}
+              onSort={toggleSort}
+              onToggleCompare={toggleCompare}
+              searchQuery={searchQuery}
+              selectedCompareIds={selectedCompareIds}
+              sortDirection={sortDirection}
+              sortKey={sortKey}
+              totalAssetsCount={assets.length}
+              visibleAssets={visibleAssets}
             />
           </div>
 
-          <MarketCompareRail isLoading={isLoading} />
+          <MarketCompareRail
+            compareLimit={compareLimit}
+            isLoading={isLoading}
+            onClear={clearCompare}
+            onRemove={toggleCompare}
+            selectedAssets={selectedAssets}
+          />
         </div>
       </section>
     </main>

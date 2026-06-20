@@ -7,6 +7,15 @@ import {
 
 export type OverviewTone = "up" | "down" | "neutral";
 export type OverviewVisual = "market-cap" | "volume" | "dominance" | "breadth";
+export type MarketSortKey =
+  | "marketCapRank"
+  | "currentPrice"
+  | "priceChangePercentage1h"
+  | "priceChangePercentage24h"
+  | "priceChangePercentage7d"
+  | "marketCap"
+  | "totalVolume";
+export type MarketSortDirection = "asc" | "desc";
 
 export type OverviewMetric = {
   label: string;
@@ -106,6 +115,58 @@ export function toneClassFromValue(value: number | null) {
   }
 
   return "text-[var(--color-muted)]";
+}
+
+export function filterAndSortAssets({
+  assets,
+  searchQuery,
+  sortKey,
+  sortDirection,
+}: {
+  assets: MarketAsset[];
+  searchQuery: string;
+  sortKey: MarketSortKey;
+  sortDirection: MarketSortDirection;
+}) {
+  const normalizedQuery = searchQuery.trim().toLowerCase();
+
+  const filtered = normalizedQuery
+    ? assets.filter((asset) => {
+        return (
+          asset.name.toLowerCase().includes(normalizedQuery) ||
+          asset.symbol.toLowerCase().includes(normalizedQuery)
+        );
+      })
+    : assets;
+
+  return [...filtered].sort((left, right) => {
+    const comparison = compareNullableNumbers(left[sortKey], right[sortKey]);
+
+    if (comparison === 0) {
+      return compareNullableNumbers(left.marketCapRank, right.marketCapRank);
+    }
+
+    return sortDirection === "asc" ? comparison : -comparison;
+  });
+}
+
+function compareNullableNumbers(
+  left: number | null,
+  right: number | null,
+) {
+  if (left === null && right === null) {
+    return 0;
+  }
+
+  if (left === null) {
+    return 1;
+  }
+
+  if (right === null) {
+    return -1;
+  }
+
+  return left - right;
 }
 
 function toneFromValue(value: number | null): OverviewTone {
